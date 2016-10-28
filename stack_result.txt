@@ -1,0 +1,65 @@
+XGBRegressor1
+nbags=5, randp=True
+1150.0003817MAE 
+{'reg_alpha': 5, 'colsample_bytree': 0.9, 'nthread': -1, 'n_estimators': 1500, 'subsample': 0.9, 'reg_lambda': 3}
+
+XGBRegressor2
+nbags=5, randp=True
+1156.68868671MAE 
+{'n_estimators': 1200, 'subsample': 0.8, 'colsample_bytree': 0.8, 'nthread': -1}
+
+XGBRegressor3
+nbags=5, randp=True
+1155.08226958MAE 
+{'n_estimators': 1500, 'subsample': 0.8, 'colsample_bytree': 0.9, 'nthread': -1}
+
+XGBRegressor4
+nbags=5, randp=True
+1153.74738622MAE 
+{'reg_alpha': 1, 'colsample_bytree': 0.8, 'nthread': -1, 'n_estimators': 1400, 'subsample': 0.9, 'reg_lambda': 3}
+
+Lasso1
+nbags=1, randp=False
+1809.84498553MAE 
+{}
+
+Ridge1
+nbags=1, randp=False
+1247.5060088MAE 
+{}
+
+LinearRegression1
+nbags=1, randp=False
+1248.78238783MAE 
+{}
+
+HuberRegressor1
+nbags=1, randp=False
+1253.92438887MAE 
+{}
+
+PassiveAggressiveRegressor1
+nbags=1, randp=False
+2391.15870336MAE 
+{}
+
+SGDRegressor1
+nbags=1, randp=False
+1265.00093428MAE 
+{}
+
+XGBRegressor5
+nbags=5, randp=False, shift=True, varselect=False
+1176.66577945MAE 
+{'reg_alpha': 1, 'colsample_bytree': 0.5, 'learning_rate': 0.01, 'nthread': -1, 'n_estimators': 2235, 'subsample': 0.1, 'gamma': 1}
+
+XGBRegressor5
+nbags=5, randp=False, shift=True, varselect=False
+1179.26820686MAE 
+{'reg_alpha': 1, 'colsample_bytree': 0.5, 'learning_rate': 0.01, 'nthread': -1, 'n_estimators': 2235, 'subsample': 0.8, 'gamma': 1}
+
+XGBRegressor6
+nbags=5, randp=False, shift=True, varselect=False
+1185.88405487MAE 
+{'reg_alpha': 5, 'colsample_bytree': 0.5, 'learning_rate': 0.01, 'nthread': -1, 'n_estimators': 2235, 'subsample': 0.8, 'gamma': 10}
+
