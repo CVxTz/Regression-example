@@ -18,6 +18,44 @@ def writeResultModel(modelname, perf, params, other):
     f.close()
 
 
+#
+model = xgb.XGBRegressor()
+modelname = "XGBRegressor7"
+params = {"n_estimators": int(2012 / 0.9), "nthread":-1,
+          "colsample_bytree":0.5, "subsample":0.8, "reg_alpha":1, "gamma":1, "learning_rate":0.01, 'min_child_weight': 1, 'max_depth': 12}
+perf = trainModel(model, params=params, nbags=5, modelname = modelname, randp=False, shift=True, varselect=False)
+other = "nbags=5, randp=False, shift=True, varselect=False"
+
+print modelname, perf, params, other
+writeResultModel(modelname, perf, params, other)
+
+
+#
+model = xgb.XGBRegressor()
+modelname = "XGBRegressor8"
+params = {"n_estimators": int(2012 / 0.9), "nthread":-1,
+          "colsample_bytree":0.5, "subsample":0.8, "reg_alpha":1, "gamma":1, "learning_rate":0.01, 'min_child_weight': 1, 'max_depth': 9}
+perf = trainModel(model, params=params, nbags=3, modelname = modelname, randp=False, shift=True, varselect=False)
+other = "nbags=5, randp=False, shift=True, varselect=False"
+
+print modelname, perf, params, other
+writeResultModel(modelname, perf, params, other)
+
+
+#
+model = xgb.XGBRegressor()
+modelname = "XGBRegressor9"
+params = {"n_estimators": int(2012 / 0.9), "nthread":-1,
+          "colsample_bytree":0.5, "subsample":0.8, "reg_alpha":1, "gamma":1, "learning_rate":0.01, 'min_child_weight': 1, 'max_depth': 15}
+perf = trainModel(model, params=params, nbags=3, modelname = modelname, randp=False, shift=True, varselect=False)
+other = "nbags=5, randp=False, shift=True, varselect=False"
+
+print modelname, perf, params, other
+writeResultModel(modelname, perf, params, other)
+
+
+
+
 # #
 # model = xgb.XGBRegressor()
 # modelname = "XGBRegressor1"
@@ -61,25 +99,25 @@ def writeResultModel(modelname, perf, params, other):
 # writeResultModel(modelname, perf, params, other)
 
 #
-model = xgb.XGBRegressor()
-modelname = "XGBRegressor5"
-params = {"n_estimators": int(2012 / 0.9), "nthread":-1,
-          "colsample_bytree":0.5, "subsample":0.8, "reg_alpha":1, "gamma":1, "learning_rate":0.01}
-perf = trainModel(model, params=params, nbags=3, modelname = modelname, randp=False, shift=True, varselect=False)
-other = "nbags=5, randp=False, shift=True, varselect=False"
-
-print modelname, perf, params, other
-writeResultModel(modelname, perf, params, other)
+# model = xgb.XGBRegressor()
+# modelname = "XGBRegressor5"
+# params = {"n_estimators": int(2012 / 0.9), "nthread":-1,
+#           "colsample_bytree":0.5, "subsample":0.8, "reg_alpha":1, "gamma":1, "learning_rate":0.01}
+# perf = trainModel(model, params=params, nbags=3, modelname = modelname, randp=False, shift=True, varselect=False)
+# other = "nbags=5, randp=False, shift=True, varselect=False"
 #
-model = xgb.XGBRegressor()
-modelname = "XGBRegressor6"
-params = {"n_estimators": int(2012 / 0.9), "nthread":-1,
-          "colsample_bytree":0.5, "subsample":0.8, "reg_alpha":5, "gamma":10, "learning_rate":0.01}
-perf = trainModel(model, params=params, nbags=3, modelname = modelname, randp=False, shift=True, varselect=False)
-other = "nbags=5, randp=False, shift=True, varselect=False"
-
-print modelname, perf, params, other
-writeResultModel(modelname, perf, params, other)
+# print modelname, perf, params, other
+# writeResultModel(modelname, perf, params, other)
+# #
+# model = xgb.XGBRegressor()
+# modelname = "XGBRegressor6"
+# params = {"n_estimators": int(2012 / 0.9), "nthread":-1,
+#           "colsample_bytree":0.5, "subsample":0.8, "reg_alpha":5, "gamma":10, "learning_rate":0.01}
+# perf = trainModel(model, params=params, nbags=3, modelname = modelname, randp=False, shift=True, varselect=False)
+# other = "nbags=5, randp=False, shift=True, varselect=False"
+#
+# print modelname, perf, params, other
+# writeResultModel(modelname, perf, params, other)
 #
 # model = Lasso()
 # params = {}

@@ -11,8 +11,9 @@ from keras.layers.normalization import BatchNormalization
 from keras.models import Sequential
 from keras.layers import Dense, GaussianNoise
 from keras.regularizers import l2, l1, l1l2, activity_l1l2
-from keras.optimizers import Adam, SGD, RMSprop, Adagrad
+from keras.optimizers import Adam, SGD, RMSprop, Adagrad, Adadelta
 import read_data
+import read_stack
 from sklearn.cross_validation import KFold
 import numpy as np
 import pandas as pd
@@ -22,7 +23,7 @@ from sklearn.feature_selection import SelectPercentile, f_classif, chi2, f_regre
 
 
 def trainModelNn(varselect = False, datasetRead = "base", modelname= "", nbags = 5,
-               params = {}, randp = False, shift = False):
+               params = {}, randp = False):
 
 
     if datasetRead == "base":
@@ -31,6 +32,8 @@ def trainModelNn(varselect = False, datasetRead = "base", modelname= "", nbags =
         xtrain, xtest, id_train, id_test, y = read_data.readDataSetcox()
     elif datasetRead == "coxpca":
         xtrain, xtest, id_train, id_test, y = read_data.readDataSetcoxpca()
+    elif datasetRead == "stack":
+        xtrain, xtest, id_train, id_test, y = read_stack.readData1()
 
 
     if varselect:
@@ -49,19 +52,16 @@ def trainModelNn(varselect = False, datasetRead = "base", modelname= "", nbags =
     ## train models
     i = 0
     shift_val = 200
-    nepochs = 55
+    nepochs = 70
     pred_oob = np.zeros(xtrain.shape[0])
     pred_test = np.zeros(xtest.shape[0])
 
     for (inTr, inTe) in folds:
         xtr = xtrain[inTr]
         xte = xtrain[inTe]
-        if shift:
-            ytr = np.log(y[inTr]+shift_val).ravel()
-            yte = np.log(y[inTe]+shift_val).ravel()
-        else:
-            ytr = np.log(y[inTr]).ravel()
-            yte = np.log(y[inTe]).ravel()
+
+        ytr = y[inTr]
+        yte = y[inTe]
 
         pred = np.zeros(xte.shape[0])
         for j in range(nbags):
@@ -71,21 +71,18 @@ def trainModelNn(varselect = False, datasetRead = "base", modelname= "", nbags =
 
             model = create_model(xtr.shape[1])(**params)
             lrs = LearningRateScheduler(init_lr(params["lr"]))
-            early = EarlyStopping(patience=2)
+            early = EarlyStopping(patience=5)
             fit = model.fit_generator(generator = batch_generator(xtr, ytr, 128, True),
                                       nb_epoch = nepochs,
                                       samples_per_epoch = xtr.shape[0],
-                                      callbacks=[lrs],
+                                      callbacks=[lrs, early],
+                                      validation_data= batch_generator(xte, yte, 128, True),
+                                      nb_val_samples=xte.shape[0],
                                       verbose = 1)
-            pred += np.exp( model.predict_generator(generator = batch_generatorp(xte, 800, False), val_samples = xte.shape[0])[:,0] )
-            pred_test += np.exp( model.predict_generator(generator = batch_generatorp(xtest, 800, False), val_samples = xtest.shape[0])[:,0] )
+            pred += model.predict_generator(generator = batch_generatorp(xte, 800, False), val_samples = xte.shape[0])[:,0]
+            pred_test += model.predict_generator(generator = batch_generatorp(xtest, 800, False), val_samples = xtest.shape[0])[:,0]
 
-            if shift:
-                pred += np.exp(model.predict(xte) )-shift_val
-                pred_test += np.exp(model.predict(xtest))-shift_val
-            else:
-                pred += np.exp(model.predict(xte) )
-                pred_test += np.exp(model.predict(xtest))
+
         pred /= nbags
         pred_oob[inTe] = pred
         i += 1
@@ -107,24 +104,24 @@ def trainModelNn(varselect = False, datasetRead = "base", modelname= "", nbags =
 
 
 def create_model(inputsize):
-    def model_fn(optimizer='adam', init='he_normal', regl1 = 0.0001, lr = 0.001, depth=2,
+    def model_fn(optimizer='adam', init='he_normal', regl1 = 0.0001, regl2 = 0.0001, lr = 0.001, depth=2,
                  nb_neurone=50, dropout_rate=0.5, BN = True ):
-        dict_opt = {'adam': Adam(lr=lr), 'sgd': SGD(lr=lr), "rmsprop": RMSprop(lr=lr), "adagrad": Adagrad(lr=lr)}
+        dict_opt = {'adam': Adam(lr=lr), 'sgd': SGD(lr=lr), "rmsprop": RMSprop(lr=lr), "adagrad": Adagrad(lr=lr), "adadelta": Adadelta(lr=lr)}
         opt = dict_opt[optimizer]
 
         model = Sequential()
-        model.add(Dense(nb_neurone, init=init , input_shape=(inputsize,), W_regularizer=l1(l=regl1)))
+        model.add(Dense(nb_neurone, init=init , input_shape=(inputsize,), W_regularizer=l1l2(l1=regl1, l2=regl2 )))
         model.add(PReLU())
         if BN:
             model.add(BatchNormalization())
         model.add(Dropout(dropout_rate))
         for i in range(depth):
-            model.add(Dense(nb_neurone, init=init, W_regularizer=l1(l=regl1)))
+            model.add(Dense(nb_neurone, init=init, W_regularizer=l1l2(l1=regl1, l2=regl2 ) ) )
             model.add(PReLU())
             if BN:
                 model.add(BatchNormalization())
             model.add(Dropout(dropout_rate))
-        model.add(Dense(1, W_regularizer=l1(l=regl1)))
+        model.add(Dense(1, W_regularizer=l1l2(l1=regl1, l2=regl2 ), init=init))
         model.compile(loss = 'mae',
                       optimizer=opt)
         return model
@@ -168,3 +165,4 @@ def batch_generatorp(X, batch_size, shuffle):
         yield X_batch
         if (counter == number_of_batches):
             counter = 0
+

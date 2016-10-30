@@ -1,2 +1,4 @@
-cd C:\Users\Jenazzad\Anaconda2
+cd C:\Users\jenazzad\Anaconda2
 python.exe C:\Users\jenazad\PycharmProjects\Regression-example\run_nn.py
+
+python.exe C:\Users\jenazad\PycharmProjects\Regression-example\run.py

@@ -63,3 +63,63 @@ nbags=5, randp=False, shift=True, varselect=False
 1185.88405487MAE 
 {'reg_alpha': 5, 'colsample_bytree': 0.5, 'learning_rate': 0.01, 'nthread': -1, 'n_estimators': 2235, 'subsample': 0.8, 'gamma': 10}
 
+ffnn1
+nbags=1, randp=False, varselect=False
+1145.40497467MAE 
+{'depth': 1, 'dropout_rate': 0.2, 'optimizer': 'adadelta', 'regl1': 0, 'nb_neurone': 200, 'lr': 0.1, 'BN': True, 'init': 'he_normal'}
+
+ffnn2
+nbags=1, randp=False, varselect=False
+1144.42138646MAE 
+{'depth': 2, 'dropout_rate': 0.3, 'optimizer': 'adam', 'regl1': 1e-05, 'nb_neurone': 170, 'lr': 0.05, 'BN': True, 'init': 'he_normal'}
+
+ffnn3
+nbags=1, randp=False, varselect=False
+1143.63655586MAE 
+{'depth': 2, 'dropout_rate': 0.3, 'optimizer': 'adam', 'regl1': 1e-06, 'nb_neurone': 200, 'lr': 0.01, 'BN': True, 'init': 'he_normal'}
+
+ffnn_stack_1
+nbags=1, randp=False, varselect=False
+1146.23555993MAE 
+{'depth': 1, 'dropout_rate': 0.2, 'optimizer': 'adam', 'regl1': 1e-06, 'nb_neurone': 20, 'lr': 0.01, 'BN': True, 'init': 'glorot_uniform'}
+
+ffnn_stack_2
+nbags=1, randp=False, varselect=False
+1152.14779152MAE 
+{'depth': 2, 'dropout_rate': 0.3, 'optimizer': 'adam', 'regl1': 1e-06, 'nb_neurone': 40, 'lr': 0.01, 'BN': True, 'init': 'glorot_uniform'}
+
+ffnn_stack_3
+nbags=1, randp=False, varselect=False
+1146.90198337MAE 
+{'depth': 3, 'dropout_rate': 0.4, 'optimizer': 'adam', 'regl1': 1e-06, 'nb_neurone': 100, 'lr': 0.01, 'BN': True, 'init': 'glorot_uniform'}
+
+XGBRegressor7
+nbags=5, randp=False, shift=True, varselect=False
+1134.50706766MAE 
+{'n_estimators': 2235, 'subsample': 0.8, 'reg_alpha': 1, 'colsample_bytree': 0.5, 'min_child_weight': 1, 'learning_rate': 0.01, 'nthread': -1, 'gamma': 1, 'max_depth': 12}
+
+XGBRegressor8
+nbags=5, randp=False, shift=True, varselect=False
+1136.56436467MAE 
+{'n_estimators': 2235, 'subsample': 0.8, 'reg_alpha': 1, 'colsample_bytree': 0.5, 'min_child_weight': 1, 'learning_rate': 0.01, 'nthread': -1, 'gamma': 1, 'max_depth': 9}
+
+XGBRegressor9
+nbags=5, randp=False, shift=True, varselect=False
+1134.10472753MAE 
+{'n_estimators': 2235, 'subsample': 0.8, 'reg_alpha': 1, 'colsample_bytree': 0.5, 'min_child_weight': 1, 'learning_rate': 0.01, 'nthread': -1, 'gamma': 1, 'max_depth': 15}
+
+ffnn4
+nbags=1, randp=False, varselect=False
+1145.12729074MAE 
+{'depth': 1, 'dropout_rate': 0.2, 'optimizer': 'adadelta', 'regl1': 0, 'nb_neurone': 1000, 'lr': 0.1, 'BN': True, 'init': 'he_normal'}
+
+ffnn4
+nbags=1, randp=False, varselect=False
+1144.38831752MAE 
+{'depth': 1, 'dropout_rate': 0.5, 'optimizer': 'adadelta', 'regl1': 0, 'nb_neurone': 1000, 'lr': 0.1, 'BN': True, 'init': 'he_normal'}
+
+ffnn5
+nbags=1, randp=False, varselect=False
+1142.07523894MAE 
+{'depth': 2, 'dropout_rate': 0.5, 'optimizer': 'adam', 'regl1': 1e-05, 'nb_neurone': 1000, 'lr': 0.1, 'BN': True, 'init': 'he_normal'}
+
