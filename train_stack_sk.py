@@ -23,7 +23,8 @@ def trainModel(model, varselect = True, datasetRead = "base", modelname= "", nba
         xtrain, xtest, id_train, id_test, y = read_data.readDataSetcox()
     elif datasetRead == "coxpca":
         xtrain, xtest, id_train, id_test, y = read_data.readDataSetcoxpca()
-
+    elif datasetRead == "impact":
+        xtrain, xtest, id_train, id_test, y = read_data.readDataSetImpact()
 
     if varselect:
         selector = SelectPercentile(f_regression, percentile=70)
