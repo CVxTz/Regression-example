@@ -240,6 +240,9 @@ def readDataSetLexical(nrows = None):
     test = train_test.iloc[ntrain:, :].copy()
     test.drop('loss', inplace=True, axis=1)
     feats = numeric_feats+ cats
+    print('Dim train', train[feats].shape)
+    print('Dim test', test[feats].shape)
+    print train["loss"]
 
     return train[feats], test[feats], train['id'], test['id'], train["loss"]
 
@@ -268,3 +271,47 @@ def encode(charcode):
     for i in range(ln):
         r += (ord(charcode[i])-ord('A')+1)*26**(ln-i-1)
     return r
+
+def readDataSetLexicalcomp(nrows = None):
+    ## read data
+    train = pd.read_csv(loc+'data/train.csv', nrows = None)
+    test = pd.read_csv(loc+'data/test.csv', nrows = None)
+
+    numeric_feats = [x for x in train.columns[1:-1] if 'cont' in x]
+    cats = [x for x in train.columns[1:-1] if 'cat' in x]
+    train_test, ntrain = mungeskewed(train, test, numeric_feats)
+    for col in cats:
+        train_test[col] = train_test[col].apply(encode)
+
+    ss = StandardScaler()
+    train_test[numeric_feats] = \
+        ss.fit_transform(train_test[numeric_feats].values)
+    train = train_test.iloc[:ntrain, :].copy()
+    test = train_test.iloc[ntrain:, :].copy()
+    test.drop('loss', inplace=True, axis=1)
+    feats = numeric_feats+ cats
+    #print('Dim train', train[feats].shape)
+    #print('Dim test', test[feats].shape)
+    #print train["loss"]
+    result = [('cat80', 'cat101', 0.53907180825224987, '-'), ('cat12', 'cat80', 0.5244145983395182, '-'), ('cat79', 'cat101', 0.50374293055346264, '+'), ('cat12', 'cat79', 0.48725474852416256, '+'), ('cat81', 'cat87', 0.41124259427488874, '-'), ('cat10', 'cat81', 0.40216609930497876, '-'), ('cat1', 'cat87', 0.39796687934844266, '-'), ('cat1', 'cat10', 0.37682725921935278, '-'), ('cat2', 'cat57', 0.33760439710228435, '+'), ('cat2', 'cat72', 0.33609668480943178, '+'), ('cat9', 'cat57', 0.32829734766307028, '+'), ('cat9', 'cat72', 0.32745999355935101, '+'), ('cat11', 'cat103', 0.31971760507461972, '+'), ('cat7', 'cat11', 0.31074403922891847, '+'), ('cat13', 'cat111', 0.3088851702393845, '+'), ('cat7', 'cat13', 0.30659326029319017, '+'), ('cat103', 'cat111', 0.2867545818618395, '+'), ('cat3', 'cat89', 0.27279044359043342, '+'), ('cat16', 'cat89', 0.2717765899443455, '+'), ('cat3', 'cat23', 0.26426274934931032, '+'), ('cat23', 'cat90', 0.26005007308112243, '+'), ('cat16', 'cat73', 0.25840263818584408, '-'), ('cat36', 'cat90', 0.25701116287606585, '+'), ('cat36', 'cat73', 0.24896439920385346, '-'), ('cat6', 'cat53', 0.22227280865202451, '-'), ('cat6', 'cat114', 0.21272517182728345, '-'), ('cat4', 'cat5', 0.21148010931581968, '+'), ('cat50', 'cat53', 0.20352936403984986, '/'), ('cat50', 'cat114', 0.19807987652587153, '/'), ('cat4', 'cat38', 0.19268232415585612, '+'), ('cat5', 'cat28', 0.19149919238692711, '+'), ('cat28', 'cat38', 0.18467524873381091, '+'), ('cat25', 'cat40', 0.17596090113808627, '+'), ('cont2', 'cat40', 0.16769798208846023, '+'), ('cont2', 'cat25', 0.15759355959907909, '+'), ('cat24', 'cat82', 0.14735626150526968, '-'), ('cat8', 'cat82', 0.1454692313049977, '-'), ('cat14', 'cat24', 0.13734357354930476, '+'), ('cat14', 'cat41', 0.13353824779963153, '+'), ('cat76', 'cat85', 0.12980695082088076, '+'), ('cat8', 'cat41', 0.12939582956814316, '+'), ('cont3', 'cat102', 0.12225565703895201, '+'), ('cat44', 'cat102', 0.12101575710907629, '+'), ('cont3', 'cat76', 0.11997431947787257, '+'), ('cat29', 'cat44', 0.11742191624417585, '+'), ('cat29', 'cat105', 0.11623900437176257, '+'), ('cat45', 'cat105', 0.11307908648407171, '+'), ('cat45', 'cat85', 0.11002306134365768, '+'), ('cont7', 'cat17', 0.10508640161523232, '+'), ('cont7', 'cat26', 0.10398589409066376, '+'), ('cat17', 'cat26', 0.10159479067982102, '+')]
+    scaler1 = StandardScaler()
+    scaler2 = StandardScaler()
+    for tup in result:
+        if tup[3] == "+":
+            resultvector = scaler1.fit_transform(train[tup[0]]) + scaler2.fit_transform(train[tup[1]])
+            resultvector_ = scaler1.transform(test[tup[0]]) + scaler2.transform(test[tup[1]])
+        if tup[3] == "-":
+            resultvector = scaler1.fit_transform(train[tup[0]]) - scaler2.fit_transform(train[tup[1]] )
+            resultvector_ = scaler1.transform( test[tup[0]] ) - scaler2.transform( test[tup[1]])
+        if tup[3] == "*":
+            resultvector = np.multiply(scaler1.fit_transform( train[tup[0]] ), scaler2.fit_transform( train[tup[1]] ) )
+            resultvector_ = np.multiply(scaler1.transform(test[tup[0]]) , scaler2.transform(test[tup[1]] ) )
+        if tup[3] == "/":
+            resultvector = np.divide(scaler1.fit_transform(  train[tup[0]] ), np.absolute(scaler2.fit_transform(  train[tup[1]] )) +1 )
+            resultvector_ = np.divide(scaler1.transform( test[tup[0]] ), np.absolute(scaler2.transform( test[tup[1]] ) ) +1 )
+
+        train[tup[0]+tup[3]+tup[1]] = resultvector
+        test[tup[0]+tup[3]+tup[1]] = resultvector_
+        feats.append(tup[0]+tup[3]+tup[1])
+
+    return train[feats], test[feats], train['id'], test['id'], train["loss"]

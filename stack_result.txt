@@ -133,3 +133,108 @@ nbags=5, randp=False, shift=True, varselect=False, datasetRead=impact
 1133.15478905MAE 
 {'n_estimators': 2235, 'subsample': 0.8, 'reg_alpha': 1, 'colsample_bytree': 0.5, 'min_child_weight': 1, 'learning_rate': 0.01, 'nthread': -1, 'gamma': 1, 'max_depth': 12}
 
+ffnn8
+nbags=1, randp=False, varselect=False, datasetRead = comp
+1159.98673809MAE 
+{'depth': 1, 'dropout_rate': 0.5, 'optimizer': 'rmsprop', 'regl1': 0.0001, 'nb_neurone': 1000, 'lr': 0.01, 'BN': True, 'init': 'he_normal'}
+
+ffnn9
+nbags=1, randp=False, varselect=False, datasetRead = comp
+1157.92773637MAE 
+{'depth': 2, 'dropout_rate': 0.5, 'optimizer': 'rmsprop', 'regl1': 1e-05, 'nb_neurone': 500, 'lr': 0.01, 'BN': True, 'init': 'he_normal'}
+
+ffnn10
+nbags=1, randp=False, varselect=False, datasetRead = comp
+1157.21487793MAE 
+{'depth': 3, 'dropout_rate': 0.5, 'optimizer': 'rmsprop', 'regl1': 0.001, 'nb_neurone': 500, 'lr': 0.01, 'BN': True, 'init': 'he_normal'}
+
+ffnn11
+nbags=1, randp=False, varselect=False
+1141.9723415MAE 
+{'depth': 2, 'dropout_rate': 0.2, 'optimizer': 'adam', 'regl2': 0, 'regl1': 0, 'nb_neurone': 500, 'lr': 0.01, 'BN': False, 'init': 'he_normal'}
+
+ffnn12
+nbags=1, randp=False, varselect=False
+1142.82719259MAE 
+{'depth': 2, 'dropout_rate': 0.3, 'optimizer': 'adam', 'regl2': 0, 'regl1': 0, 'nb_neurone': 500, 'lr': 0.01, 'BN': False, 'init': 'he_normal'}
+
+ffnn14
+nbags=1, randp=False, varselect=False
+1162.76762422MAE 
+{'depth': 2, 'dropout_rate': 0.3, 'optimizer': 'adam', 'regl2': 0.001, 'regl1': 0, 'nb_neurone': 500, 'lr': 0.01, 'BN': False, 'init': 'he_normal', 'prelu': False}
+
+ffnn15
+nbags=1, randp=False, varselect=False
+1169.86909218MAE 
+{'depth': 3, 'dropout_rate': 0.4, 'optimizer': 'adam', 'regl2': 0, 'regl1': 0.0001, 'nb_neurone': 500, 'lr': 0.01, 'BN': False, 'init': 'he_normal', 'prelu': False}
+
+ffnn16
+nbags=1, randp=False, varselect=False
+1164.97568607MAE 
+{'depth': 2, 'dropout_rate': 0.5, 'optimizer': 'adam', 'regl2': 0.01, 'regl1': 0, 'nb_neurone': 500, 'lr': 0.01, 'BN': False, 'init': 'he_normal', 'prelu': False}
+
+ffnn17
+nbags=1, randp=False, varselect=False
+1149.81131501MAE 
+{'depth': 2, 'dropout_rate': 0.3, 'optimizer': 'adam', 'regl2': 0.001, 'regl1': 0, 'nb_neurone': 200, 'lr': 0.01, 'BN': False, 'init': 'he_normal', 'prelu': False}
+
+ffnn18
+nbags=1, randp=False, varselect=False
+1166.78561428MAE 
+{'depth': 3, 'dropout_rate': 0.5, 'optimizer': 'adam', 'regl2': 0.01, 'regl1': 0.0001, 'nb_neurone': 700, 'lr': 0.01, 'BN': False, 'init': 'he_normal', 'prelu': False}
+
+ffnn19
+nbags=1, randp=False, varselect=False
+1187.3031077MAE 
+{'depth': 2, 'dropout_rate': 0.5, 'optimizer': 'adam', 'regl2': 1e-05, 'regl1': 0.01, 'nb_neurone': 1000, 'lr': 0.01, 'BN': False, 'init': 'he_normal', 'prelu': False}
+
+ffnn20
+nbags=1, randp=False, varselect=False
+1144.93710811MAE 
+{'depth': 2, 'dropout_rate': 0.3, 'optimizer': 'adam', 'regl2': 0.001, 'regl1': 0, 'nb_neurone': 500, 'lr': 0.003, 'BN': False, 'init': 'he_normal', 'prelu': False}
+
+ffnn21
+nbags=1, randp=False, varselect=False
+1172.7052182MAE 
+{'depth': 3, 'dropout_rate': 0.4, 'optimizer': 'adam', 'regl2': 0.0001, 'regl1': 0.0001, 'nb_neurone': 500, 'lr': 0.0001, 'BN': False, 'init': 'he_normal', 'prelu': False}
+
+ffnn22
+nbags=1, randp=False, varselect=False
+1156.32649018MAE 
+{'depth': 2, 'dropout_rate': 0.5, 'optimizer': 'adam', 'regl2': 0.01, 'regl1': 0, 'nb_neurone': 600, 'lr': 0.001, 'BN': False, 'init': 'he_normal', 'prelu': False}
+
+ffnn23
+nbags=1, randp=False, varselect=False
+1152.62201552MAE 
+{'depth': 2, 'dropout_rate': 0.3, 'optimizer': 'adam', 'regl2': 0.01, 'regl1': 0, 'nb_neurone': 500, 'lr': 0.003, 'BN': False, 'init': 'he_normal', 'prelu': False}
+
+ffnn27
+nbags=1, randp=False, varselect=False, model2 = True
+1133.90534672MAE 
+{}
+
+ffnn28
+nbags=1, randp=False, varselect=False, model2 = True, datasetRead = impact
+1131.57448408MAE 
+{}
+
+XGBRegressor11
+nbags=5, randp=False, shift=True, varselect=False, datasetRead=impact
+1133.28811526MAE 
+{'n_estimators': 2235, 'subsample': 0.8, 'reg_alpha': 1, 'colsample_bytree': 0.5, 'min_child_weight': 1, 'learning_rate': 0.01, 'nthread': -1, 'gamma': 1, 'max_depth': 12}
+
+ffnn29
+nbags=1, randp=False, varselect=False, model2 = True
+1133.98351413MAE 
+{}
+
+ffnn30
+nbags=1, randp=False, varselect=False, model2 = True, datasetRead = impact
+1131.45728361MAE 
+{}
+
+ffnn31
+nbags=5, randp=False, varselect=False, model2 = True, datasetRead = impact
+1130.83402503MAE 
+{}
+

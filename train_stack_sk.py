@@ -11,7 +11,16 @@ import pandas as pd
 from sklearn.metrics import mean_absolute_error
 import xgboost as xgb
 from sklearn.feature_selection import SelectPercentile, f_classif, chi2, f_regression
+from sklearn.cross_validation import StratifiedKFold
 
+def list_to_percentiles(numbers):
+    pairs = zip(numbers, range(len(numbers)))
+    pairs.sort(key=lambda p: p[0])
+    result = [0 for i in range(len(numbers))]
+    for rank in xrange(len(numbers)):
+        original_index = pairs[rank][1]
+        result[original_index] = int( rank * 100.0 / (len(numbers)-1))
+    return result
 
 def trainModel(model, varselect = True, datasetRead = "base", modelname= "", nbags = 5,
                params = {}, randp = False, shift = False):
@@ -33,15 +42,17 @@ def trainModel(model, varselect = True, datasetRead = "base", modelname= "", nba
 
         xtrain = selector.transform(xtrain)
         xtest = selector.transform(xtest)
-
+    shift_val = 200
     early_stopping = 20
     ## cv-folds
     nfolds = 5
-    folds = KFold(len(y), n_folds = nfolds, shuffle = True, random_state = 111)
+    lossl = list_to_percentiles(np.log(y+shift_val).ravel())
+    folds = StratifiedKFold(lossl, n_folds=5, shuffle = True, random_state = 20)
+    #folds = KFold(len(y), n_folds = nfolds, shuffle = True, random_state = 111)
 
     ## train models
     i = 0
-    shift_val = 200
+    
     nepochs = 55
     pred_oob = np.zeros(xtrain.shape[0])
     pred_test = np.zeros(xtest.shape[0])

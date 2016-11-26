@@ -121,8 +121,19 @@ def writeResultModel(modelname, perf, params, other):
 # writeResultModel(modelname, perf, params, other)
 
 #
+#model = xgb.XGBRegressor()
+#modelname = "XGBRegressor10"
+#params = {"n_estimators": int(2012 / 0.9), "nthread":-1,
+#          "colsample_bytree":0.5, "subsample":0.8, "reg_alpha":1, "gamma":1, "learning_rate":0.01, 'min_child_weight': 1, 'max_depth': 12}
+#perf = trainModel(model, params=params, nbags=5, modelname = modelname, randp=False, shift=True, varselect=False, datasetRead="impact")
+#other = "nbags=5, randp=False, shift=True, varselect=False, datasetRead=impact"
+#
+#p#rint modelname, perf, params, other
+#writeResultModel(modelname, perf, params, other)
+
+#
 model = xgb.XGBRegressor()
-modelname = "XGBRegressor10"
+modelname = "XGBRegressor11"
 params = {"n_estimators": int(2012 / 0.9), "nthread":-1,
           "colsample_bytree":0.5, "subsample":0.8, "reg_alpha":1, "gamma":1, "learning_rate":0.01, 'min_child_weight': 1, 'max_depth': 12}
 perf = trainModel(model, params=params, nbags=5, modelname = modelname, randp=False, shift=True, varselect=False, datasetRead="impact")
@@ -130,6 +141,8 @@ other = "nbags=5, randp=False, shift=True, varselect=False, datasetRead=impact"
 
 print modelname, perf, params, other
 writeResultModel(modelname, perf, params, other)
+
+
 
 #
 # model = Lasso()

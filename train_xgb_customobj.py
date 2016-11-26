@@ -19,7 +19,7 @@ base = False
 if base:
     xtrain, xtest, id_train, id_test, y = read_data.readDataSetBase()
 else:
-    xtrain, xtest, id_train, id_test, y = read_data.readDataSetLexical()
+    xtrain, xtest, id_train, id_test, y = read_data.readDataSetLexicalcomp()
 
 def logregobj(preds, dtrain):
     labels = dtrain.get_label()
@@ -33,12 +33,13 @@ params = {}
 params['booster'] = 'gbtree' #gbtree
 params['objective'] = "reg:linear"
 params['eval_metric'] = 'mae'
-params['eta'] = 0.001
-#params['gamma'] = 0.5290
+params['eta'] = 0.01
+params['gamma'] = 1
+params['alpha'] = 1
 params['min_child_weight'] = 1
 params['colsample_bytree'] = 0.5
-params['subsample'] = 0.8
-params['max_depth'] = 12
+params['subsample'] = 0.6
+params['max_depth'] = 8
 #params['max_delta_step'] = 0
 params['silent'] = 1
 params['verbose_eval']= True
@@ -62,17 +63,18 @@ def xg_eval_mae(yhat, dtrain):
     return 'mae', mean_absolute_error(np.exp(y), np.exp(yhat))
 ## train models
 i = 0
-nbags = 1
+nbags = 3
 nepochs = 55
 pred_oob = np.zeros(xtrain.shape[0])
 pred_test = np.zeros(xtest.shape[0])
 shift = 200
 d_test = xgb.DMatrix(xtest)
 for (inTr, inTe) in folds:
-    xtr = xtrain[inTr]
-    ytr = np.log(y[inTr]).ravel() + shift
-    xte = xtrain[inTe]
-    yte = np.log(y[inTe]).ravel() + shift
+    xtr = xtrain.iloc[inTr]
+    ytr = np.log(y.iloc[inTr] + shift).ravel()
+    xte = xtrain.iloc[inTe]
+    yte = np.log(y.iloc[inTe]+ shift).ravel() 
+    print yte
     d_train = xgb.DMatrix(xtr, label=ytr)
     d_valid = xgb.DMatrix(xte, label=yte)
     watchlist = [(d_train, 'train'), (d_valid, 'eval')]
@@ -96,9 +98,9 @@ print('Total - MAE:', mean_absolute_error(y, pred_oob))
 loc = "C:/Users/jenazad/PycharmProjects/Regression-example/"
 ## train predictions
 df = pd.DataFrame({'id': id_train, 'loss': pred_oob})
-df.to_csv(loc+'submissions/preds_oob_xgb_fs_log.csv', index = False)
+df.to_csv(loc+'submissions/preds_oob_xgb_customobj_comp_a.csv', index = False)
 
 ## test predictions
 pred_test /= (nfolds*nbags)
 df = pd.DataFrame({'id': id_test, 'loss': pred_test})
-df.to_csv(loc+'submissions/submission_xgb_fs_log.csv', index = False)
+df.to_csv(loc+'submissions/submission_xgb_customobj_comp_a.csv', index = False)
