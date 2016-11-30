@@ -158,6 +158,7 @@ shift = 200
 loss = np.log(loss+ shift).ravel()
 
 def score(params):
+    params['max_depth'] = int(params['max_depth'])
     pred = 0
     perf = 0
     pred_test = np.zeros(X.shape[0])
