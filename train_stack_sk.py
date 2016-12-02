@@ -23,7 +23,7 @@ def list_to_percentiles(numbers):
     return result
 
 def trainModel(model, varselect = True, datasetRead = "base", modelname= "", nbags = 5,
-               params = {}, randp = False, shift = False):
+               params = {}, randp = False, shift = False, data = []):
 
 
     if datasetRead == "base":
@@ -34,6 +34,8 @@ def trainModel(model, varselect = True, datasetRead = "base", modelname= "", nba
         xtrain, xtest, id_train, id_test, y = read_data.readDataSetcoxpca()
     elif datasetRead == "impact":
         xtrain, xtest, id_train, id_test, y = read_data.readDataSetImpact()
+    elif datasetRead == "indata":
+        xtrain, xtest, id_train, id_test, y = data[0], data[1], data[2], data[3], data[4]
 
     if varselect:
         selector = SelectPercentile(f_regression, percentile=70)
@@ -89,11 +91,17 @@ def trainModel(model, varselect = True, datasetRead = "base", modelname= "", nba
     loc = "C:/Users/jenazad/PycharmProjects/Regression-example/"
     ## train predictions
     df = pd.DataFrame({'id': id_train, 'loss': pred_oob})
-    df.to_csv(loc+'stacking_preds/preds_oob_xgb_'+modelname+'.csv', index = False)
+
+
+    perf = mean_absolute_error(y, pred_oob)
+
+    df.to_csv(loc+'opt_sk/preds_oob_'+modelname+str(perf)+'.csv', index = False)
 
     ## test predictions
 
-    df = pd.DataFrame({'id': id_test, 'loss': pred_test})
-    df.to_csv(loc+'stacking_preds/submission_xgb_'+modelname+'.csv', index = False)
 
-    return mean_absolute_error(y, pred_oob)
+
+    df = pd.DataFrame({'id': id_test, 'loss': pred_test})
+    df.to_csv(loc+'opt_sk/submission_'+modelname+str(perf)+'.csv', index = False)
+
+    return perf
