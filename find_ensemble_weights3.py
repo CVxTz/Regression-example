@@ -1,0 +1,98 @@
+
+from scipy.optimize import minimize
+from sklearn.metrics import log_loss
+import os
+import pandas as pd
+import numpy as np
+from sklearn.metrics import mean_absolute_error
+
+loc = "C:/Users/jenazad/PycharmProjects/Regression-example/"
+
+files_test = \
+[loc+"submissions/submission_8nn1120.35550117.csv",
+loc+"submissions/submission_stack1xgb1123.52789983.csv",
+loc+"submissions/submission_skknn112503.7071538.csv",
+loc+"submissions/submission_skknn2_11535.0010296.csv"]
+
+
+files_train = [loc+"submissions/preds_oob_8nn1120.35550117.csv",
+loc+"submissions/preds_oob_stack1xgb1123.52789983.csv",
+loc+"submissions/preds_oob_skknn112503.7071538.csv",
+loc+"submissions/preds_oob_skknn2_11535.0010296.csv"]
+
+dict_test = {}
+dict_train = {}
+
+colnames = []
+for i in range(len(files_train)):
+    colnames.append("loss"+str(i+1))
+    dict_test[i] = pd.read_csv(files_test[i]).rename(index=str, columns={"loss": "loss"+str(i+1)})
+    dict_train[i] = pd.read_csv(files_train[i]).rename(index=str, columns={"loss": "loss"+str(i+1)})
+
+for i in range(len(files_train)):
+    if i == 0:
+        data = dict_test[i]
+        datat = dict_train[i]
+    else:
+        data = data.merge(dict_test[i], on="id")
+        datat = datat.merge(dict_train[i], on="id")
+
+train = pd.read_csv(loc+'data/train.csv', nrows = None)
+
+train = train[["loss", "id"]]
+
+datat = datat.merge(train, on="id")
+
+def mae_loss_func(weights):
+    """
+    scipy minimize will pass the weights as a numpy array
+    """
+    final_prediction = 0
+    shift = weights[-1]
+    weights = weights[0:(len(weights)-1)]
+    for weight, prediction in zip(weights, predictions):
+            final_prediction += weight*prediction
+
+    return mean_absolute_error(train['loss'], final_prediction+shift)
+
+
+# finding the optimum weights
+predictions = []
+for i in range(1, (len(files_train)+1)):
+    predictions.append(datat['loss'+str(i)])
+
+# the algorithms need a starting value, right not we chose 0.5 for all weights
+# its better to choose many random starting points and run minimize a few times
+starting_values = np.random.rand(( len(predictions)+ 1),1) # [3, -2, 3, 7, 0.1, 1, 8, 3, 20, 100]
+# adding constraints and a different solver as suggested by user 16universe
+cons = ({'type': 'eq', 'fun': lambda w: 1-sum(w)}) #
+
+# our weights are bound between 0 and 1
+bounds = [(-10, 10)] * ( len(predictions)+ 1)
+
+res = minimize(mae_loss_func, starting_values, method='SLSQP') #, constraints=cons , bounds=bounds
+
+print('Ensemble Score: {best_score}'.format(best_score=res['fun']))
+print('Best Weights: {weights}'.format(weights=res['x']))
+
+predictions_t = []
+for i in range(1,( len(files_train)+1)):
+    predictions_t.append(data['loss'+str(i)])
+
+
+def mae_func(weights):
+    """
+    scipy minimize will pass the weights as a numpy array
+    """
+    final_prediction = 0
+    shift = weights[-1]
+    weights = weights[0:(len(weights)-1)]
+    for weight, prediction in zip(weights, predictions_t):
+            final_prediction += weight*prediction
+
+    return final_prediction+shift
+
+
+data["loss"] = mae_func( res['x'] )
+
+data[["id", "loss"]].to_csv(loc+"submissions/submission_avgnnxgbbase"+"_"+str(res['fun'])+".csv", index=False)
